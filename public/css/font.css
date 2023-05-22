@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'Sarabun-Regular';
+    src: url('./fonts/Sarabun-Regular.ttf');
+}
+@font-face {
+    font-family: 'Athiti';
+    src: url('./fonts/Athiti-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Kanit';
+    src: url('./fonts/Kanit-Regular.ttf');
+}
+
+
+*{
+    font-family: 'Sarabun-Regular', sans-serif !important;
+}
+
