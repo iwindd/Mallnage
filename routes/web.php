@@ -117,11 +117,10 @@ Route::middleware('isUser')->group(function () {
 
     /* HISTORY */
     Route::get('/history'            , [HistoryController::class, 'get'])     ->name("history");
-    Route::get('/history/getData'            , [HistoryController::class, 'getData'])     ->name("historyGet");
     Route::get('/history/{id}'       , [HistoryController::class, 'view'])    ->name("historyView");
     Route::get('/history/receipt/get/{id}'       , [HistoryController::class, 'get_receipt'])    ->name("historyReceipt");
     Route::post('/history/receipt'       , [HistoryController::class, 'receipt'])    ->name("historyRealReceipt");
-
+    
     /* SUMMARY */
 
     /* STOCK */ // ใช้ใน product routeแทน

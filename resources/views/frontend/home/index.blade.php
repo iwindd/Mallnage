@@ -18,6 +18,7 @@
     <form action="{{route('report')}}" method="get" id="report"></form>
     <form action="{{route('receipt')}}" method="get" id="receipt"></form>
     <form action="{{route('categories')}}" method="get" id="categories"></form>
+    <form action="{{route('history')}}" method="get" id="history"></form>
     <form action="{{route('trade')}}" method="get" id="tradeForm"></form>
 
     @if (session('status'))
@@ -68,14 +69,14 @@
             </div>
         </div>
         <div class="col-sm-12 col-md-6">
-            <div class="card h-100" data-apply-form="categories">
+            <div class="card h-100" data-apply-form="history">
                 <div class="card-header" style="background: #dd4b39 !important; color:white;">
                     ประวัติการซื้อขาย
                 </div>
                 <div class="card-body">
                     <blockquote class="blockquote mb-0">
-                        <p>มีประเภทสินค้าทั้งหมด @formatNumber($categories) รายการ</p>
-                        <footer class="blockquote-footer">ประเภทสินค้า</footer>
+                        <p>มีประวัติการซื้อขายทั้งหมด @formatNumber($histories) รายการ</p>
+                        <footer class="blockquote-footer">ประวัติการซื้อขาย</footer>
                     </blockquote>
                 </div>
             </div>

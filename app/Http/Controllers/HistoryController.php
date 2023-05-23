@@ -13,32 +13,42 @@ use App\Models\User;
 use Carbon\Carbon;
 
 use PDF;
-
+use DataTables;
 
 class HistoryController extends Controller
 {
-    public function get(){
+    public function get(Request $request){
+        if ($request->ajax()) {
+            $data = null;
 
-        $isEmployees = Auth::user()->employees != -1 ? true:false;
-        $data = null;
-
-        if (!$isEmployees) {
-            $data = History::where('cooperative', '=', Auth::user()->id)->get([
-                'id', 'note', 'product', 'price', 'qrcode', 'created_at', 'isRetail'
-            ]);
-        }else{
-            $data = History::where([
-                ['cooperative', '=', Auth::user()->employees],
-                ['created_by', '=', Auth::user()->id]
-            ])->get([
-                'id', 'note', 'product', 'price', 'qrcode', 'created_at', 'isRetail'
-            ]);
+            $isEmployees = Auth::user()->employees != -1 ? true:false;
+        
+            if (!$isEmployees) {
+                $data = History::where('cooperative', '=', Auth::user()->id)->get([
+                    'id', 'note', 'product', 'price', 'qrcode', 'created_at', 'isRetail'
+                ]);
+            }else{
+                $data = History::where([
+                    ['cooperative', '=', Auth::user()->employees],
+                    ['created_by', '=', Auth::user()->id]
+                ])->get([
+                    'id', 'note', 'product', 'price', 'qrcode', 'created_at', 'isRetail'
+                ]);
+            }
+    
+            return Datatables::of($data)->addIndexColumn()
+                ->addColumn('action', function($row){
+                    $btn = '<a href="'.route("historyView", ['id' => $row['id']]).'" class="btn btn-primary btn-sm"> <i class="fa-solid fa-magnifying-glass"></i> เพิ่มเติม</a>';
+                    return $btn;
+                })
+                ->addColumn("productData", function($row){
+                    return $row['product'];
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
 
-
-        return view('frontend.history.index', [
-            'histories' => $data
-        ]);
+       return view('frontend.history.index');
     }
 
     public function view(Int $id){

@@ -482,7 +482,7 @@
             });
 
             $(document).on("keydown", (e) => {
-                if (e.which == 13) {
+                if (e.which == 32) {
                     e.preventDefault()
                     Swal.fire({
                         title: 'แจ้งเตือน',

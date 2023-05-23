@@ -64,6 +64,5 @@ class AppServiceProvider extends ServiceProvider
             return "<?php echo ($expression)->format('d/m/Y H:i'); ?>";
         });
 
-
     }
 }

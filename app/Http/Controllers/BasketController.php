@@ -195,16 +195,13 @@ class BasketController extends Controller{
                 }
             }
 
-            $hisTemp = $this->randstr(20);
-    
-            History::create([
+            $hisData = History::create([
                 'cooperative' => $cooperativeId,
                 'note'        => $note,
                 'product'     => json_encode($items),
                 'product_borrows' => json_encode($borrowsItems),
                 'qrcode'      => $withQrcode,
                 'price'       => $price,
-                'temp'        => $hisTemp,
 
                 'firstname' => $request->firstname,
                 'lastname' => $request->lastname,
@@ -221,6 +218,7 @@ class BasketController extends Controller{
                 'isRetail' => $isRetail
             ]);    
 
+
             $_price = number_format($price, 0);
             $_date = $this->DateThai(date("Y-m-d-H-i"), true).'   '.date('H:i');
 
@@ -231,30 +229,10 @@ class BasketController extends Controller{
             $message = $message."วันที่ : $_date";
             $this->sendLine($message);
 
-            $hisId = null;
-
-            while ($hisId == null) {
-                $query = History::where([
-                    ['cooperative', $cooperativeId],
-                    ['note', $note],
-                    ['product', json_encode($items)],
-                    ['qrcode', $withQrcode],
-                    ['price', $price],
-                    ['temp', $hisTemp],
-                    ['isRetail', $isRetail]
-                ])->first('id');
-
-                if ($query->id){
-                    $hisId = $query->id;
-                }
-            }
-
-            History::find($hisId)->update([
-                'temp' => null
-            ]);
+            $hisId = $hisData->id;
 
             return redirect()->back()
-                ->with('status', 'จบรายการแล้ว <a href="'.route('historyReceipt', $hisId).'">รับใบเสร็จ</a>')
+                ->with('status', '<b>#'.$hisId.'</b> จบรายการแล้ว <a href="'.route('historyReceipt', $hisId).'">รับใบเสร็จ</a>')
                 ->with('class', 'warning')
                 ->with('items', $items)
                 ->with('price', $price);
