@@ -58,22 +58,39 @@
                     <tr>
                         <th>ชื่อประเภท</th>
                         <th>วันที่เพิ่ม</th>
+                        <th>จำนวนสินค้ารวมคงเหลือ</th>
                         <th>เครื่องมือ</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($categories as $category)
                         <tr>
-                            <td >{{ $category->category_name }}</td>
-                            <td title="วว/ดด/ปป">@formatDateAndTime($category->created_at)</td>
+                            <td >{{ $category['category_name'] }}</td>
+                            @php
+                                //format to thai date
+                                $category['created_at'] = date('d/m/Y', strtotime($category['created_at']));
+                            @endphp
+                            <td title="วว/ดด/ปป">{{$category['created_at']}}</td>
+                            @php
+                                $category['total_quantity'] = number_format($category['total_quantity']);
+                            @endphp
+                            <td>{{$category['total_quantity']}}</td>
                             <td>
                                 <a href="{{
                                     route('categoriesEdit', [
-                                        'id' => $category->id
+                                        'id' => $category['id']
                                     ])
                                 }}" class="btn btn-primary text-nowrap">
                                     <i class="fa-solid fa-pencil"></i>
                                     แก้ไข
+                                </a>
+                                <a href="{{
+                                    route('categoriesPDF', [
+                                        'id' => $category['id']
+                                    ])
+                                }}" class="btn btn-primary text-nowrap">
+                                   <i class="fa-solid fa-file-export"></i>
+                                    PDF
                                 </a>
                             </td>
                         </tr>

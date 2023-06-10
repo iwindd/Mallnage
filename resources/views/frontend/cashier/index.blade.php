@@ -3,9 +3,6 @@
     $isEmployees = Auth::user()->employees != -1 ? true:false;
 @endphp
 @section('content')
-
-    <link rel="stylesheet" href="{{asset('css/selectize.bootstrap3.min.css')}}">
-    <script src="{{asset('js/selectize.min.js')}}"></script>
     <style>
         .hover-slide {
             transform: translateX(70%) !important;
@@ -97,60 +94,6 @@
                     @endif
                 </div>
 
-                <hr>
-         
-                <div id="products">
-
-                    <div class="accordion mb-2" id="products">
-                        <div class="accordion-item">
-                          <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                              สินค้าภายในร้าน
-                            </button>
-                          </h2>
-                          <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
-                            <div class="accordion-body">
-                           
-                                <table class="mt-2 mb-1 table table-striped product-table">
-                                    <thead>
-                                        <th>รหัสสินค้า</th>
-                                        <th>ชื่อสินค้า</th>
-                                        <th>จำนวนคงเหลือ</th>
-                                        <th>ราคา</th>
-                                        <th>อื่นๆ</th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($products as $product)
-                                            <tr>
-                                                <td>{{$product->serial}}</td>
-                                                <td>{{$product->name}}</td>
-                                                <td>@formatNumber($product->quantity)</td>
-                                                <td>@convertToBath($product->price)</td>
-                                                <td>
-                                                   {{--  <a href="#" class="btn btn-success">เพิ่ม</a> --}}
-                                                   <form id="addBasketForm" action="{{ route('basketAdd') }}" method="POST">
-                                                        @csrf
-                                                         <input type="hidden" name="product_quantity" id="product_quantity" value="1">
-                                                        <input type="hidden" name="product_serial" value="{{$product->serial}}">
-                                                        <button type="submit" class="btn btn-success">เพิ่ม</button>
-                                                        <input type="hidden" name="retail" value="{{$isRetail}}">
-                                                        @if (!$isEmployees)
-                                                            <a href="{{ route('productEdit', ['serial' => $product->serial, 'retail' => $isRetail]) }}" class="btn btn-primary">จัดการ</a>  
-                                                        @endif
-                                                   </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-
-
-                </div>
             </div>
             <div class="col-sm-12 col-lg-3 border-start">
                 <h2>ตะกร้า</h2>
@@ -290,26 +233,6 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <script>
-                                        let selectize;
-                                        $(document).ready(function () {
-                                            let items = {{Js::From($selectize)}}
-                                                 
-                                            items.forEach((element, num) => {
-                                                items[num].value = items[num].label;
-                                            });
-            
-            
-                                            selectize = $('#department').selectize({
-                                                sortField: 'text',
-                                                options: items,
-                                                labelField: 'label',
-                                                searchField: ['id', 'label'],
-                                                sortField: 'label',
-                                                maxItems: 1,
-                                            });
-                                        });
-                                    </script>
                                 </div>
                                 <div>
                                     <h4 class="my-3">ที่อยู่</h4>

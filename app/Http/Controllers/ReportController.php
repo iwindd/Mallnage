@@ -39,7 +39,6 @@ class ReportController extends Controller
         $logMerge = [];
         $logArrayRaw = [];
         $totalPrice  = 0;
-   
      
 
         /* MERGE ITEM AND GET PRICE */
@@ -196,11 +195,14 @@ class ReportController extends Controller
     public function most(){
         $from = empty($_COOKIE["date"]['start']) ? date("Y-m-d"):$_COOKIE["date"]['start'];
         $to = empty($_COOKIE["date"]['end']) ? date("Y-m-d"):$_COOKIE["date"]['end'];
+
+
         $to = Carbon::parse($to)    
             ->addHours(23)
             ->addMinutes(59)
             ->addSeconds(59)
             ->toDateTimeString();
+
         
         $log   = Log::where([
                                     ['logs.cooperative', '=', Auth::user()->id],
@@ -322,13 +324,11 @@ class ReportController extends Controller
 
             
             if(isset($Seller[$item->serial])) {
-       
                 $Seller[$item->serial] += $item->amount;
             }else{
                 $Seller[$item->serial] = $item->amount;
                 $data[$item->serial] = $item;
                 $SellerNumCount += 1;
-
             }
         }
 
@@ -382,8 +382,14 @@ class ReportController extends Controller
     public function pdf(){
         if (Auth::user()->grade !== 1) return redirect()->route('home');
         /* GET TIME */
-        $from = empty($_COOKIE["date"]['start']) ? date("Y-m-d"):$_COOKIE["date"]['start'];
-        $to   = empty($_COOKIE["date"]['end'])   ? date("Y-m-d"):$_COOKIE["date"]['end'];
+        $from = date("Y-m-d");
+        $to   = date("Y-m-d");
+
+        $from = Carbon::parse($to)    
+            ->addHours(0)
+            ->addMinutes(0)
+            ->addSeconds(0)
+            ->toDateTimeString();
 
         $to = Carbon::parse($to)    
             ->addHours(23)
@@ -391,21 +397,29 @@ class ReportController extends Controller
             ->addSeconds(59)
             ->toDateTimeString();
         
+        //dd($from, $to);
+        $log           = Log::where([
+            ['logs.cooperative', '=', Auth::user()->id],
+            ['logs.type', '=', 3],
+            ['logs.qrcode' , 0]
+        ])
+        ->whereBetween('logs.created_at', [$from, $to])
+        ->leftJoin('products', [
+            ['logs.serial', '=', 'products.serial'],
+            ['logs.cooperative', '=', 'products.cooperative']
+        ])
+        ->get([
+            'logs.amount',
+            'products.price'
+        ]);
+        $totalPrice  = 0;
 
+        foreach($log as $item) {
+            $totalPrice += $item->price*$item->amount;
+        }
 
-        /* GET ORDER */
-        $orders = $this->GetBestAndOldSeller($from, $to);
-
-        
-        $bestSeller =  $orders['most'];
-        $badSeller  =  $orders['least'];
-
-
-        /* EXPORT PDF */
- /*        $asset = asset('image/pdf/cooperative.png');
- */
         $tradePrice = $this->getPriceOfTrade($from, $to);
-        $totalPrice = $orders['totalPrice']-$tradePrice;
+        $totalPrice = $totalPrice-$tradePrice;
         $totalPrice = $totalPrice < 0 ? 0:$totalPrice;
 
         $pdf = PDF::loadView('frontend.report.pdf.index', [
@@ -413,13 +427,8 @@ class ReportController extends Controller
             'timeTo'   => $this->DateThai($to),
             'timeNow'  => $this->DateThai(date('Y-m-d')),
  
-            'totalPrice' => $totalPrice,
-
-            'most'  => $bestSeller,
-            'least' => $badSeller
+            'totalPrice' => $totalPrice
         ]);
-
-
 
         return  $pdf -> stream('pdf.pdf');
     }

@@ -80,7 +80,12 @@
                     <div class="col-sm-12 col-lg-4 p-1">
                         <div class="card">
                             <div class="card-header">
-                                ยอดเงินวันนี้
+                                <div class="d-flex justify-content-between">
+                                    <div>ยอดเงินวันนี้</div>
+                                    <div>
+                                        <a href="{{ route('reportPdf') }}"><i class="fa-solid fa-file-export link-primary" id="export-pdf-today"></i></a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <span>รวม @convertToBath($totalTodayAll) </span> <br>
@@ -191,9 +196,9 @@
                 <div class="row mb-5">
                     <div class="col-sm-12 col-md-12 col-lg-4{{--  d-flex justify-content-center align-items-center --}}">
                         <div>
-                            @if (Auth::user()->grade == 1)
-                                <a {{-- href="{{route('reportPdf')}}" target="_blank" --}} href="#" data-bs-target="#pdfModal" data-bs-toggle="modal" class="btn btn-primary my-2">PDF <i class="fa-solid fa-download"></i></a>
-                            @endif
+                        {{--     @if (Auth::user()->grade == 1)
+                                <a href="#" data-bs-target="#pdfModal" data-bs-toggle="modal" class="btn btn-primary my-2">PDF <i class="fa-solid fa-download"></i></a>
+                            @endif --}}
                         </div>
                     </div>
                 </div>
@@ -203,7 +208,7 @@
 @endsection
 
 @section('footer')
-    @if (Auth::user()->grade == 1)
+{{--     @if (Auth::user()->grade == 1)
         <div class="modal fade " id="pdfModal" tabindex="-1" data-bs-focus="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -217,12 +222,6 @@
                                 <option value="default">ค่าเริ่มต้น</option>
                             </select>
 
-            {{--                 <form action="{{route('reportPdf')}}" class="update-Form" method="post" data-form-update="default">
-                                
-                                <input type="text" class="form-control" placeholder="หัวเรื่อง)">
-                            </form>
- --}}
-                 
                         </form>
 
                     </div>
@@ -233,7 +232,7 @@
                 </div>
             </div>
         </div>
-    @endif
+    @endif --}}
 
     <script> /* DATE SYSTEM */
         const getCurrentDate = () => {

@@ -44,6 +44,7 @@ use App\Http\Controllers\BannedController;
 
 
 /* LOGIN ROUTE */
+
 Auth::routes();
 
 
@@ -51,7 +52,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/', [HomeController::class, 'guest'])->name('index');
     Route::get('/signup', [UserController::class, 'signup'])->name('signup');
 
-    
+
     Route::post('/signup/signup', [UserController::class, 'signupAdd'])->name('signupAdd');
 });
 
@@ -82,64 +83,65 @@ Route::middleware('isUser')->group(function () {
     Route::get('/borrows/canceled', [BorrowController::class, 'canceled'])->name('borrowsCanceled');
     Route::get('/borrows/canceled/view/{borrowsId}', [BorrowController::class, 'borrowsCanceledView'])->name('borrowsCanceledView');
 
-/*     Route::get('/borrows/summary', [BorrowController::class, 'summary'])->name('borrowsSummary'); */
+    /*     Route::get('/borrows/summary', [BorrowController::class, 'summary'])->name('borrowsSummary'); */
 
     Route::post('/borrows/work',       [BorrowController::class, 'work'])->name('borrowsWork');
     Route::post('/borrows/add',       [BorrowController::class, 'borrow'])->name('borrowsAdd');
     Route::post('/borrows/close',       [BorrowController::class, 'close'])->name('borrowsClose');
 
     /* CATEGORIES */
-    Route::get('/categories'               , [CategoriesController::class, 'get']   )->name("categories");
-    Route::get('/categories/edit'               , [CategoriesController::class, 'view']   )->name("categoriesEdit");
+    Route::get('/categories', [CategoriesController::class, 'get'])->name("categories");
+    Route::get('/categories/edit', [CategoriesController::class, 'view'])->name("categoriesEdit");
+    Route::get('/categories/pdf', [CategoriesController::class, 'pdf'])->name("categoriesPDF");
 
-    Route::post('/categories/db/store'               , [CategoriesDBController::class, 'store']   )->name("categoriesStore");
-    Route::post('/categories/db/update'               , [CategoriesDBController::class, 'update']   )->name("categoriesUpdate");
-    Route::post('/categories/db/delete'               , [CategoriesDBController::class, 'delete']   )->name("categoriesDelete");
+    Route::post('/categories/db/store', [CategoriesDBController::class, 'store'])->name("categoriesStore");
+    Route::post('/categories/db/update', [CategoriesDBController::class, 'update'])->name("categoriesUpdate");
+    Route::post('/categories/db/delete', [CategoriesDBController::class, 'delete'])->name("categoriesDelete");
 
     /* TRADE */
     Route::get('/trade', [TradeController::class, 'index'])->name('trade');
     Route::post('/trade/add', [TradeController::class, 'add'])->name('tradeAdd');
-    
+
 
     /* PRODUCT */
-    Route::get('/product'               , [StockController::class, 'get']   )->name("product");
-    Route::get('/product/search/{name}' , [StockController::class, 'search'])->name("productSearch");
-/*     Route::get('/product/add'           , [ProductController::class, 'add'])   ->name("productAdd"); */
+    Route::get('/product', [StockController::class, 'get'])->name("product");
+    Route::get('/product/search/{name}', [StockController::class, 'search'])->name("productSearch");
+    /*     Route::get('/product/add'           , [ProductController::class, 'add'])   ->name("productAdd"); */
     Route::get('/product/barcode', [ProductController::class, 'barcode'])->name("productBarcode");
-    Route::get('/product/edit/{serial}' , [ProductController::class, 'edit'])  ->name("productEdit");
+    Route::get('/product/edit/{serial}', [ProductController::class, 'edit'])->name("productEdit");
     Route::post('/product/summary', [ProductController::class, 'summary'])->name("productSummary");
 
     /* PRODUCT DB */
-    Route::post('/product/db/store',             [ProductDBController::class, 'store'])   ->name("product_add");
-    Route::post('/product/db/quickstore',        [ProductDBController::class, 'quick_store'])   ->name("product_quickadd");
-    Route::post('/product/db/update/{serial}',   [ProductDBController::class, 'edit'])    ->name("product_update");
-    Route::get('/product/db/delete/{serial}',    [ProductDBController::class, 'delete'])  ->name("product_remove");
+    Route::post('/product/db/store',             [ProductDBController::class, 'store'])->name("product_add");
+    Route::post('/product/db/quickstore',        [ProductDBController::class, 'quick_store'])->name("product_quickadd");
+    Route::post('/product/db/update/{serial}',   [ProductDBController::class, 'edit'])->name("product_update");
+    Route::get('/product/db/delete/{serial}',    [ProductDBController::class, 'delete'])->name("product_remove");
 
     /* HISTORY */
-    Route::get('/history'            , [HistoryController::class, 'get'])     ->name("history");
-    Route::get('/history/{id}'       , [HistoryController::class, 'view'])    ->name("historyView");
-    Route::get('/history/receipt/get/{id}'       , [HistoryController::class, 'get_receipt'])    ->name("historyReceipt");
-    Route::post('/history/receipt'       , [HistoryController::class, 'receipt'])    ->name("historyRealReceipt");
-    
+    Route::get('/history', [HistoryController::class, 'get'])->name("history");
+    Route::get('/history/{id}', [HistoryController::class, 'view'])->name("historyView");
+    Route::get('/history/receipt/get/{id}', [HistoryController::class, 'get_receipt'])->name("historyReceipt");
+    Route::post('/history/receipt', [HistoryController::class, 'receipt'])->name("historyRealReceipt");
+
     /* SUMMARY */
 
     /* STOCK */ // ใช้ใน product routeแทน
     //Route::get('/stock'              , [StockController::class,  'get'])    ->name('stock');
-   // Route::get('/stock/{name}'       , [StockController::class,  'search']) ->name('stockSearch');
+    // Route::get('/stock/{name}'       , [StockController::class,  'search']) ->name('stockSearch');
 
     /* REPORT */
-    Route::get('/report'              , [ReportController::class,  'get'])   ->name('report');
-    Route::get('/report/most'         , [ReportController::class,  'most'])  ->name('reportMost');
-    Route::get('/report/least'        , [ReportController::class,  'least']) ->name('reportLeast');
+    Route::get('/report', [ReportController::class,  'get'])->name('report');
+    Route::get('/report/most', [ReportController::class,  'most'])->name('reportMost');
+    Route::get('/report/least', [ReportController::class,  'least'])->name('reportLeast');
 
     /* EXPORT PDF REPORT */
-    Route::get('/report/pdf'          , [ReportController::class,  'pdf'])   ->name('reportPdf'); 
+    Route::get('/report/pdf', [ReportController::class,  'pdf'])->name('reportPdf');
 
     /* RECEIPT */
     Route::get('/receipt', [ReceiptController::class, 'get'])->name('receipt');
     Route::get('/receipt/{id}', [ReceiptController::class, 'export'])->name('exportReceipt');
 
-    
+
     /* EMPLOYEES */
     Route::get('/employees', [EmployeeController::class, 'get'])->name('employees');
     Route::get('/employees/add', [EmployeeController::class, 'add'])->name('employeesAdd');
@@ -150,13 +152,12 @@ Route::middleware('isUser')->group(function () {
 
     /* Profile */
 
-    Route::get('/profile'           , [CooperativeController::class,  'get'])   ->name('setting'); 
-    Route::post('/profile/db/update/lineNotification', [CooperativeController::class,  'editLineNotification'])   ->name('updateLineNotification'); 
-    Route::post('/profile/db/update/password', [CooperativeController::class,  'editPassword'])   ->name('setting_updatePassword'); 
-    Route::post('/profile/db/update/tel', [CooperativeController::class,  'editTel'])   ->name('setting_updateTel'); 
-    Route::post('/profile/db/update/lineId', [CooperativeController::class,  'editLineId'])   ->name('setting_updateLineId'); 
-    Route::post('/profile/db/update/address', [CooperativeController::class,  'editAddress'])   ->name('setting_updateAddress'); 
-    
+    Route::get('/profile', [CooperativeController::class,  'get'])->name('setting');
+    Route::post('/profile/db/update/lineNotification', [CooperativeController::class,  'editLineNotification'])->name('updateLineNotification');
+    Route::post('/profile/db/update/password', [CooperativeController::class,  'editPassword'])->name('setting_updatePassword');
+    Route::post('/profile/db/update/tel', [CooperativeController::class,  'editTel'])->name('setting_updateTel');
+    Route::post('/profile/db/update/lineId', [CooperativeController::class,  'editLineId'])->name('setting_updateLineId');
+    Route::post('/profile/db/update/address', [CooperativeController::class,  'editAddress'])->name('setting_updateAddress');
 });
 
 /* ADMIN ROUTE */
@@ -166,10 +167,10 @@ Route::middleware('isAdmin')->group(function () {
     Route::get('/admin/users', [HomeController::class, 'adminUsers'])->name('admin.users');/* USER MANAGEMENT IS INDEX */
 
     /* USER MANAGEMENT */
-    Route::get('/admin/user', [UserManagementController::class, 'management'])->name('admin.managements'); 
-    Route::middleware('management')->group(function(){
+    Route::get('/admin/user', [UserManagementController::class, 'management'])->name('admin.managements');
+    Route::middleware('management')->group(function () {
         /* PRODUCT */
-        Route::get('/admin/user/product', [ProductController::class, '_get'])->name('admin.managements.product');  
+        Route::get('/admin/user/product', [ProductController::class, '_get'])->name('admin.managements.product');
         Route::get('/admin/user/product/{name}', [ProductController::class, '_view'])->name('admin.managements.product.view');
 
         /* PRODUCT DB */
@@ -179,13 +180,13 @@ Route::middleware('isAdmin')->group(function () {
 
 
         /* HISTORY */
-        Route::get('/admin/user/history', [HistoryController::class, '_get'])->name('admin.managements.history');  
-        Route::get('/admin/user/history/{name}', [HistoryController::class, '_view'])->name('admin.managements.history.view');  
+        Route::get('/admin/user/history', [HistoryController::class, '_get'])->name('admin.managements.history');
+        Route::get('/admin/user/history/{name}', [HistoryController::class, '_view'])->name('admin.managements.history.view');
 
-        
+
         /* receipt */
-        Route::get('/admin/user/receipt', [ReceiptController::class, '_get'])->name('admin.managements.receipt');  
-        Route::post('/admin/user/receipt/db', [ReceiptController::class, 'insert'])->name('admin.managements.receipt.insert');  
+        Route::get('/admin/user/receipt', [ReceiptController::class, '_get'])->name('admin.managements.receipt');
+        Route::post('/admin/user/receipt/db', [ReceiptController::class, 'insert'])->name('admin.managements.receipt.insert');
 
         /* EDIT PROFILE */
         Route::post('/admin/user/db/edit/group', [UserDBController::class, 'editGroup'])->name('admin.user_editGroup');
@@ -223,5 +224,4 @@ Route::middleware('isAdmin')->group(function () {
 
 
 /* BANNED ROUTE */
-Route::get('/banned', [BannedController::class,  'index']) ->name('banned') -> middleware('isBanned');
-
+Route::get('/banned', [BannedController::class,  'index'])->name('banned')->middleware('isBanned');
