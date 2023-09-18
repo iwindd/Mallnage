@@ -1,43 +1,41 @@
 
 @php
-function baht_text(float $amount): string
-{
-    [$integer, $fraction] = explode('.', number_format(abs($amount), 2, '.', ''));
+    function baht_text(float $amount): string{
+        [$integer, $fraction] = explode('.', number_format(abs($amount), 2, '.', ''));
 
-    $baht = convert($integer);
-    $satang = convert($fraction);
+        $baht = convert($integer);
+        $satang = convert($fraction);
 
-    $output = $amount < 0 ? 'ลบ' : '';
-    $output .= $baht ? $baht.'บาท' : '';
-    $output .= $satang ? $satang.'สตางค์' : 'ถ้วน';
+        $output = $amount < 0 ? 'ลบ' : '';
+        $output .= $baht ? $baht.'บาท' : '';
+        $output .= $satang ? $satang.'สตางค์' : 'ถ้วน';
 
-    return $baht.$satang === '' ? 'ศูนย์บาทถ้วน' : $output;
-}
-
-function convert(string $number): string
-{
-    $values = ['', 'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า'];
-    $places = ['', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน', 'ล้าน'];
-    $exceptions = ['หนึ่งสิบ' => 'สิบ', 'สองสิบ' => 'ยี่สิบ', 'สิบหนึ่ง' => 'สิบเอ็ด'];
-
-    $output = '';
-
-    foreach (str_split(strrev($number)) as $place => $value) {
-        if ($place % 6 === 0 && $place > 0) {
-            $output = $places[6].$output;
-        }
-
-        if ($value !== '0') {
-            $output = $values[$value].$places[$place % 6].$output;
-        }
+        return $baht.$satang === '' ? 'ศูนย์บาทถ้วน' : $output;
     }
 
-    foreach ($exceptions as $search => $replace) {
-        $output = str_replace($search, $replace, $output);
-    }
+    function convert(string $number): string{
+        $values = ['', 'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า'];
+        $places = ['', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน', 'ล้าน'];
+        $exceptions = ['หนึ่งสิบ' => 'สิบ', 'สองสิบ' => 'ยี่สิบ', 'สิบหนึ่ง' => 'สิบเอ็ด'];
 
-    return $output;
-}
+        $output = '';
+
+        foreach (str_split(strrev($number)) as $place => $value) {
+            if ($place % 6 === 0 && $place > 0) {
+                $output = $places[6].$output;
+            }
+
+            if ($value !== '0') {
+                $output = $values[$value].$places[$place % 6].$output;
+            }
+        }
+
+        foreach ($exceptions as $search => $replace) {
+            $output = str_replace($search, $replace, $output);
+        }
+
+        return $output;
+    }
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +47,7 @@ function convert(string $number): string
 
     <style>
         *{
-            box-sizing: border-box;
+            box-sizing: border-box ;
         }
         body {
             font-family: 'sarabun', sans-serif;
@@ -57,16 +55,11 @@ function convert(string $number): string
             margin: 5em;
         }
 
-        h1,h2,h3, p{
-            margin: 0px;
-        }
-
-        h1{
-            margin-top: .5em;
+        p{
+            margin: 0;-
         }
 
         .header th{
-
             text-align: left;
             width: fit-content;
         }
@@ -97,25 +90,51 @@ function convert(string $number): string
         .borrow{
             color: rgb(148, 18, 18) !important;
         }
+
+
+        .logo{
+            float: left;
+        }
+
+        .title{
+            float: right;
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+            display: flex;
+            margin-left: 2em;
+            margin-top: -1.5em;
+            width: 70%;
+            position: relative;
+        }
+
+        .clear{
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+
+        
     </style>
 </head>
 <body > 
     <div style="width: 100%; height: 100%; padding: 2em;">
-        @if (auth()->user()->grade == 1)
-            <div style="text-align: center">
-                <img 
-                    src="image/pdf/svc_logo.png" 
-                    style="border:0px solid rgb(255,255,0); width: 15%;" 
-                    alt=""
-                >
-            </div>
-        @endif
-
-        <div style="text-align: center;">
-            <h1>ใบเสร็จ</h1>
-            <h2>{{$title}}</h2>
-            <h3>{{$address_shop}}</h3>
+        <div style="float: left; width: 20%; height: 15%;">
+            <img 
+                class="logo"
+                src="image/pdf/svc_logo.png" 
+                style="width: 100%; float: left;" 
+                alt=""
+            > 
         </div>
+        <div style="float: right; width: 76%; height: 15%; padding: 0; ">
+            <h1>{{$title}}</h1>
+            <span>{{$address_shop}}</span>
+        </div>
+
+
+        <div class="clear"></div>
 
         <hr>
 
@@ -170,14 +189,20 @@ function convert(string $number): string
             $allPrice = 0;
         @endphp
 
+        <style>
+            th{
+                text-transform: uppercase;
+            }
+        </style>
+
         <table style="width: 100%;" class="items">
             
             <tr style="border-bottom: 1px solid black;">
-                <th>ที่</th>
-                <th>รายการ</th>
-                <th>หน่วยละ</th>
-                <th>จำนวน</th>
-                <th style="border-right: 0px; ">จำนวนเงิน</th>
+                <th>ที่<br>Number</th>
+                <th>รายการ<br>Description</th>
+                <th>หน่วยละ<br>Unit price</th>
+                <th>จำนวน<br>Quantity</th>
+                <th style="border-right: 0px; ">จำนวนเงิน<br> (Baht)</th>
             </tr>
 
             @foreach ($products as $product)
@@ -223,13 +248,16 @@ function convert(string $number): string
 
     <div style="position: absolute; top: 2%; right: 4%; text-align:right;">
         <div>
-            <p>เลขที่ <span>{{$id}}</span></p>
+            <p>เลขที่ <span>{{$currentYear}}-{{$id}}</span></p>
         </div>
-        <div>
-            <p>{{$date}}</p> 
-        </div>
-    </div>
+    </div> 
 
+    <div style="position: absolute; top: 15%; right: 4%; text-align:right;">
+        <div>
+            <p>วันที่ <span>{{$date}}</span></p>
+        </div>
+  
+    </div> 
 
 </body>
 </html>

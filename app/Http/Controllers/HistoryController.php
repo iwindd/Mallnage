@@ -25,14 +25,14 @@ class HistoryController extends Controller
         
             if (!$isEmployees) {
                 $data = History::where('cooperative', '=', Auth::user()->id)->get([
-                    'id', 'note', 'product', 'price', 'qrcode', 'created_at', 'isRetail'
+                    'id', 'note', 'product', 'price', 'qrcode', 'created_at', 'isRetail', 'receipted', 'receipted_at'
                 ]);
             }else{
                 $data = History::where([
                     ['cooperative', '=', Auth::user()->employees],
                     ['created_by', '=', Auth::user()->id]
                 ])->get([
-                    'id', 'note', 'product', 'price', 'qrcode', 'created_at', 'isRetail'
+                    'id', 'note', 'product', 'price', 'qrcode', 'created_at', 'isRetail', 'receipted', 'receipted_at'
                 ]);
             }
     
@@ -99,24 +99,41 @@ class HistoryController extends Controller
         $cooperativeId = Auth::user()->employees != -1 ? Auth::user()->employees:Auth::user()->id;
 
         $history = null;
+        $fills = [
+            'id', 'product', 'product_borrows', 'price', 'created_at', 'firstname', 'lastname',
+            'qrcode', 'address', 'district', 'area', 'province', 'postalcode', 'note',
+            'department', 'created_by', 'receipted'
+        ];
 
         if (!$isEmployees) {
-            $history = History::where('id', '=', $id)->where('cooperative', '=', Auth::user()->id)->first([
-                'id', 'product', 'product_borrows', 'price', 'created_at', 'firstname', 'lastname',
-                'qrcode', 'address', 'district', 'area', 'province', 'postalcode', 'note',
-                'department', 'created_by'
-            ]);
+            $history = History::where('id', '=', $id)->where('cooperative', '=', Auth::user()->id)->first($fills);
         }else{
             $history = History::where('id', '=', $id)->where([
                 ['cooperative', '=', Auth::user()->employees],
                 ['created_by', '=', Auth::user()->id]
-            ])->first([
-                'id', 'product', 'product_borrows', 'price', 'created_at', 'firstname', 'lastname',
-                'qrcode', 'address', 'district', 'area', 'province', 'postalcode', 'note',
-                'department', 'created_by'
-            ]);
+            ])->first($fills);
         }
-        
+
+        $updated = false;
+
+        if (!$history->receipted) {
+            $nextReceiptId = History::where([
+                ['receipted', '!=', 0],
+                ['cooperative', '=', $cooperativeId]
+            ])->count() + 1;
+
+            $updated = true;
+            $history->receipted = $nextReceiptId;
+        }
+
+        if (!$history->receipted_at){
+            $history->receipted_at = Carbon::now();
+            $updated = true;
+        }
+
+        if ($updated) {
+            $history->save();
+        }
 
         $products = [];
         $result = [];
@@ -133,7 +150,6 @@ class HistoryController extends Controller
                 $result[$serial] = $products[$serial];
                 $result[$serial]['quantity'] = $quantity;
                 $result[$serial]['borrow'] = 'no-borrow';
-
             }
         }
 
@@ -147,17 +163,16 @@ class HistoryController extends Controller
 
         $created_by_fullname = Auth::user()->fullname;
 
-
-
-        $date = Carbon::parse($history->created_at)    
-            ->addHours(23)
-            ->addMinutes(59)
-            ->addSeconds(59)
+        $date = Carbon::parse($history->receipted_at)    
             ->toDateTimeString();
+
+
+        $addres_shop = (auth()->user()->address.' '.auth()->user()->province.' '.auth()->user()->area.' '.auth()->user()->district.' '.auth()->user()->postalcode);
+
 
         $pdf = PDF::loadView('frontend.history.receipt', [
             'products' => $result,
-            'id'       => $history->id,
+            'id'       => $history->receipted,
             'payment'  => $history->qrcode == 1 ? 'โอน':'เงินสด',
             'firstname' => $history->firstname,
             'lastname' => $history->lastname,
@@ -175,6 +190,7 @@ class HistoryController extends Controller
 
 
             'title'    => Auth::user()->name,
+            'currentYear' => Carbon::now()->year + 543,
             'date'     => $this->DateThai($date)
         ]);
 

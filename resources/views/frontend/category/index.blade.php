@@ -88,7 +88,10 @@
                                     route('categoriesPDF', [
                                         'id' => $category['id']
                                     ])
-                                }}" class="btn btn-primary text-nowrap">
+                                }}" 
+                                
+                                target="_blank"
+                                class="btn btn-primary text-nowrap">
                                    <i class="fa-solid fa-file-export"></i>
                                     PDF
                                 </a>

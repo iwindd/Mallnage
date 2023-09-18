@@ -24,18 +24,18 @@
             <table class="table table-striped table-hover dt-responsive display nowrap" cellspacing="0" id="historyTable">
                 <thead>
                     <tr>
-                        <th class="w-10">#</th>
+                        <th class="w-10"># ลำดับ</th>
                         <th>หมายเหตุ
                             <i class="fa-solid fa-circle-info ms-2" style="color: grey;"
                                 title="ชื่อผู้ใช้ รหัสการสั่งจอง คำอธิบาย ข้อมูล คำชี้แจงเพิ่มเติม หรือ อื่นๆ"
                             ></i>
-                            
                         </th>
                         <th>ประเภท</th>
-                        <th>จำนวน</th>
                         <th>ยอดรวม</th>
                         <th>วิธีการชำระเงิน</th>
                         <th>ทำรายการเมื่อ</th>
+                        <th># ลำดับใบเสร็จ</th>
+                        <th>ออกใบเสร็จเมื่อ</th>
                         <th>อื่นๆ</th>
                     </tr>
                 </thead>
@@ -77,7 +77,7 @@
             }  
 
             const DateFormat = (timestamp) =>{
-                return  new Date(timestamp).toLocaleDateString('th-TH')
+                return new Date(timestamp).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
             }
 
   
@@ -96,12 +96,11 @@
                     {data: 'id', name: 'id'},
                     {data: 'note', name: 'note'},
                     {data: 'isRetail', name: 'isRetail', render : (data) => {return data == "1" ? "ส่ง":"ปลีก"}},
-                    {data: 'productData', name: 'productData', render : (data) => {
-                        return NumFormat(JSON.parse(data.replace(/&quot;/g,'"')))
-                    }},
                     {data: 'price', name: 'price', render : MoneyFormat},
                     {data: 'qrcode', name: 'qrcode', render : (data) => {return data == 1 ? 'โอนเงิน':'เงินสด'}},
                     {data: 'created_at', name: 'created_at', render: DateFormat },
+                    {data: 'receipted', name: 'receipted', render : (data) => {return data == 0 ? '-':data}},
+                    {data: 'receipted_at', name: 'receipted_at', render: (data) => {return data ? DateFormat(data):"-"} },
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });

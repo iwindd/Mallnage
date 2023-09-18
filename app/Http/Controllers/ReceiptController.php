@@ -51,14 +51,10 @@ class ReceiptController extends Controller{
     }
 
     public function export(Int $id){
-
         $data = Receipt::where([
             ['cooperative', Auth::user()->id],
             ['id', $id]
         ])->first();
-
-
-
 
         return view('frontend.receipt.export', [
             'data' => $data,

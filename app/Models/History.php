@@ -16,6 +16,8 @@ class History extends Model
         'product_borrows',
         'price',
         'qrcode',
+        'receipted',
+        'receipted_at',
         'temp',
 
         'firstname',

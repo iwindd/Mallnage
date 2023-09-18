@@ -83,7 +83,7 @@
                                 <div class="d-flex justify-content-between">
                                     <div>ยอดเงินวันนี้</div>
                                     <div>
-                                        <a href="{{ route('reportPdf') }}"><i class="fa-solid fa-file-export link-primary" id="export-pdf-today"></i></a>
+                                        <a href="{{ route('reportPdf') }}" target="_blank"><i class="fa-solid fa-file-export link-primary" id="export-pdf-today"></i></a>
                                     </div>
                                 </div>
                             </div>
