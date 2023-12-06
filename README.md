@@ -1,6 +1,7 @@
 ###
 
 ระบบจัดการร้านค้า
-(ฝากแก้ ERRORS ให้ด้วย)
+ปล.เป็นโปรเจคฝึก laravel โปรเจคเต็มๆ คือ github/iStore นะ
+(https://github.com/iwindd/iStore) อันนี้
 
 // LARAVEL
